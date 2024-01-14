@@ -1,0 +1,59 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega4809"</DEVICE>
+ <WORKING_DIR>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\Debug\segmentTest.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>segmentTest.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>segmentTest.map</FILE>
+  <FILE>segmentTest.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <digit1><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>11</LINE></digit1>
+  <digit2><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>12</LINE></digit2>
+  <digit3><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>13</LINE></digit3>
+  <digit4><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>14</LINE></digit4>
+  <char1><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>17</LINE></char1>
+  <char2><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>18</LINE></char2>
+  <char3><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>19</LINE></char3>
+  <char4><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>20</LINE></char4>
+  <text_len><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>23</LINE></text_len>
+  <current_letter><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>24</LINE></current_letter>
+  <RESET><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>27</LINE></RESET>
+  <start><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>33</LINE></start>
+  <porte_isr><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>100</LINE></porte_isr>
+  <shifting_text_init><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>264</LINE></shifting_text_init>
+  <main><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>94</LINE></main>
+  <display_text><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>184</LINE></display_text>
+  <button_pressed><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>126</LINE></button_pressed>
+  <button_released><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>112</LINE></button_released>
+  <delay><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>398</LINE></delay>
+  <wait_for_0><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>130</LINE></wait_for_0>
+  <shift_buffer><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>290</LINE></shift_buffer>
+  <text2bin_last_char><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>153</LINE></text2bin_last_char>
+  <text2bin_all><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>161</LINE></text2bin_all>
+  <letters><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>422</LINE></letters>
+  <turn_off_digit><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>391</LINE></turn_off_digit>
+  <text><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>423</LINE></text>
+  <init_loop><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>281</LINE></init_loop>
+  <shift_loop><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>314</LINE></shift_loop>
+  <rollover><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>346</LINE></rollover>
+  <shift><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>325</LINE></shift>
+  <delayouter><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>405</LINE></delayouter>
+  <delayinner><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>407</LINE></delayinner>
+  <numbers><FILE>C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm</FILE><LINE>421</LINE></numbers>
+ </LABELS>
+</ASSEMBLER_INFO>
