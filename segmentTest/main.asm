@@ -111,14 +111,19 @@ porte_isr:
 
 	button_released:
     ; Handle button release
-		rcall delay
+		;rcall delay
 		sbis VPORTE_IN, 0 ;check for 1 (indicating that the button was let go)
 		rjmp button_released
 
 		pop r16
 		out CPU_SREG, r16
-		ldi r16, PORT_INT0_bm ;clear IRQ flag for PE0
+
+		lds r16, PORTE_INTFLAGS
+		ori r16, PORT_INT0_bm
 		sts PORTE_INTFLAGS, r16
+
+		;ldi r16, PORT_INT0_bm ;clear IRQ flag for PE0
+		;sts PORTE_INTFLAGS, r16
 
 		sei
 		reti
@@ -128,22 +133,21 @@ porte_isr:
     ; (You may use a timer or a loop with a delay)
     ; Proceed with button handling after debounce
 		wait_for_0:
-			rcall delay
 			sbic VPORTE_IN, 0 ;wait for PE0 being 0
 			rjmp wait_for_0
-			;rcall delay ;delay when you see a 0
+			rcall delay ;delay when you see a 0
 
-			rcall shift_buffer
+			sbic VPORTE_INTFLAGS, 0
+			rcall shift_buffer_up
+
 			rjmp button_released
 
 
+	;ldi r16, PORT_INT0_bm ;clear IRQ flag for PE0
+	;sts PORTE_INTFLAGS, r16
 
-
-	;rcall shift_buffer
-
-	pop r16
-	out CPU_SREG, r16
-	ldi r16, PORT_INT0_bm ;clear IRQ flag for PE0
+	lds r16, PORTE_INTFLAGS		;clear IRQ flag
+	ori r16, PORT_INT0_bm
 	sts PORTE_INTFLAGS, r16
 
 	sei
@@ -298,7 +302,7 @@ shifting_text_init:
 	rcall text2bin_all
 	ret
 
-shift_buffer:
+shift_buffer_up:
 	cli
 	push ZL
 	push ZH
