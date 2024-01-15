@@ -263,7 +263,18 @@ display_text:
 
 shifting_text_init:
 	;init text length
-	ldi r16, 8
+	ldi ZL, LOW(text<<1)	; Z points to the text we want to input
+	ldi ZH, HIGH(text<<1)
+
+	
+	ldi r16, 0
+	not_EOL:
+		lpm r17, Z+
+		inc r16
+		cpi r17, '/'
+		brne not_EOL
+
+	dec r16
 	sts text_len, r16
 
 	;init current letter position
@@ -417,7 +428,9 @@ delayinner:
 	ret
 
 
-;starts with 0-9
+; numbers is the segment values for 0-9
+; letters are the segment values for A-Z
+; text is the actual text you want to display and uses '/' as end of line
 numbers: .db $03,$D7,$61,$C1,$95,$89,$09,$D3,$01,$91
 letters: .db $11,$0D,$2B,$45,$29,$39,$81,$15,$D7,$CB,$19,$2F,$59,$5D,$4D,$31,$91,$7D,$89,$2D,$4F,$A7,$A5,$5F,$85,$63
-text: .db 'D','E','E','Z','N','U','T','S'
+text: .db 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','/'

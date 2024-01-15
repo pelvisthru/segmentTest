@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm Sun Jan 14 01:15:11 2024
+AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm Sun Jan 14 21:20:53 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -3037,18 +3037,19 @@ CSEG main         00000062
 CSEG display_text 000000a2
 CSEG button_pressed 00000077
 CSEG button_released 0000006d
-CSEG delay        00000144
+CSEG delay        0000014b
 CSEG wait_for_0   00000077
-CSEG shift_buffer 000000fb
+CSEG shift_buffer 00000102
 CSEG text2bin_last_char 00000083
 CSEG text2bin_all 0000008b
-CSEG letters      00000158
-CSEG turn_off_digit 0000013f
-CSEG text         00000165
-CSEG init_loop    000000f5
-CSEG shift_loop   00000110
-CSEG rollover     0000012c
-CSEG shift        0000011a
-CSEG delayouter   00000149
-CSEG delayinner   0000014a
-CSEG numbers      00000153
+CSEG letters      0000015f
+CSEG turn_off_digit 00000146
+CSEG text         0000016c
+CSEG not_EOL      000000ed
+CSEG init_loop    000000fc
+CSEG shift_loop   00000117
+CSEG rollover     00000133
+CSEG shift        00000121
+CSEG delayouter   00000150
+CSEG delayinner   00000151
+CSEG numbers      0000015a

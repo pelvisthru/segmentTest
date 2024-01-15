@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm Sun Jan 14 01:15:11 2024
+AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm Sun Jan 14 21:20:53 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
@@ -4625,7 +4625,7 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
                                  
                                  	button_released:
                                      ; Handle button release
-00006d d0d6                      		rcall delay
+00006d d0dd                      		rcall delay
 00006e 9b90                      		sbis VPORTE_IN, 0 ;check for 1 (indicating that the button was let go)
 00006f cffd                      		rjmp button_released
                                  
@@ -4642,12 +4642,12 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
                                      ; (You may use a timer or a loop with a delay)
                                      ; Proceed with button handling after debounce
                                  		wait_for_0:
-000077 d0cc                      			rcall delay
+000077 d0d3                      			rcall delay
 000078 9990                      			sbic VPORTE_IN, 0 ;wait for PE0 being 0
 000079 cffd                      			rjmp wait_for_0
                                  			;rcall delay ;delay when you see a 0
                                  
-00007a d080                      			rcall shift_buffer
+00007a d087                      			rcall shift_buffer
 00007b cff1                      			rjmp button_released
                                  
                                  
@@ -4709,7 +4709,7 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
 0000ab 9130 2803                 	lds r19, digit4				; select digit
 0000ad b939                      	out VPORTC_OUT, r19
                                  
-0000ae ebe0                      	ldi ZL, LOW(letters<<1)		; set pointer to table beginning
+0000ae ebee                      	ldi ZL, LOW(letters<<1)		; set pointer to table beginning
 0000af e0f2                      	ldi ZH, HIGH(letters<<1)
                                  
 0000b0 e010                      	ldi r17, $00
@@ -4719,12 +4719,12 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
 0000b5 9104                      	lpm r16, Z
 0000b6 9300 0404                 	sts PORTA_OUT, r16			; display letter
                                  
-0000b8 d086                      	rcall turn_off_digit		; turn digit OFF
+0000b8 d08d                      	rcall turn_off_digit		; turn digit OFF
                                  
 0000b9 9130 2802                 	lds r19, digit3
 0000bb b939                      	out VPORTC_OUT, r19
                                  
-0000bc ebe0                      	ldi ZL, LOW(letters<<1)
+0000bc ebee                      	ldi ZL, LOW(letters<<1)
 0000bd e0f2                      	ldi ZH, HIGH(letters<<1)
                                  
 0000be 9120 2806                 	lds r18, char3	
@@ -4733,12 +4733,12 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
 0000c2 9104                      	lpm r16, Z
 0000c3 9300 0404                 	sts PORTA_OUT, r16
                                  
-0000c5 d079                      	rcall turn_off_digit
+0000c5 d080                      	rcall turn_off_digit
                                  
 0000c6 9130 2801                 	lds r19, digit2
 0000c8 b939                      	out VPORTC_OUT, r19
                                  
-0000c9 ebe0                      	ldi ZL, LOW(letters<<1)
+0000c9 ebee                      	ldi ZL, LOW(letters<<1)
 0000ca e0f2                      	ldi ZH, HIGH(letters<<1)
                                  
 0000cb 9120 2805                 	lds r18, char2
@@ -4747,12 +4747,12 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
 0000cf 9104                      	lpm r16, Z
 0000d0 9300 0404                 	sts PORTA_OUT, r16
                                  
-0000d2 d06c                      	rcall turn_off_digit
+0000d2 d073                      	rcall turn_off_digit
                                  
 0000d3 9130 2800                 	lds r19, digit1
 0000d5 b939                      	out VPORTC_OUT, r19
                                  
-0000d6 ebe0                      	ldi ZL, LOW(letters<<1)
+0000d6 ebee                      	ldi ZL, LOW(letters<<1)
 0000d7 e0f2                      	ldi ZH, HIGH(letters<<1)
                                  
 0000d8 9120 2804                 	lds r18, char1
@@ -4761,7 +4761,7 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
 0000dc 9104                      	lpm r16, Z
 0000dd 9300 0404                 	sts PORTA_OUT, r16
                                  	
-0000df d05f                      	rcall turn_off_digit
+0000df d066                      	rcall turn_off_digit
                                  
 0000e0 91ff                      	pop ZH
 0000e1 91ef                      	pop ZL
@@ -4777,110 +4777,121 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
                                  
                                  shifting_text_init:
                                  	;init text length
-0000ea e008                      	ldi r16, 8
-0000eb 9300 2808                 	sts text_len, r16
+0000ea ede8                      	ldi ZL, LOW(text<<1)	; Z points to the text we want to input
+0000eb e0f2                      	ldi ZH, HIGH(text<<1)
+                                 
+                                 	
+0000ec e000                      	ldi r16, 0
+                                 	not_EOL:
+0000ed 9115                      		lpm r17, Z+
+0000ee 9503                      		inc r16
+0000ef 321f                      		cpi r17, '/'
+0000f0 f7e1                      		brne not_EOL
+                                 
+0000f1 950a                      	dec r16
+0000f2 9300 2808                 	sts text_len, r16
                                  
                                  	;init current letter position
-0000ed e004                      	ldi r16, 4
-0000ee 9300 2809                 	sts current_letter, r16
+0000f4 e004                      	ldi r16, 4
+0000f5 9300 2809                 	sts current_letter, r16
                                  
                                  	;initialize the buffer
-0000f0 ecea                      	ldi ZL, LOW(text<<1)	; Z points to the text we want to input
-0000f1 e0f2                      	ldi ZH, HIGH(text<<1)
+0000f7 ede8                      	ldi ZL, LOW(text<<1)	; Z points to the text we want to input
+0000f8 e0f2                      	ldi ZH, HIGH(text<<1)
                                  
-0000f2 e0c4                      	ldi YL, LOW(char1)		; Y points to the buffer
-0000f3 e2d8                      	ldi YH, HIGH(char1)
+0000f9 e0c4                      	ldi YL, LOW(char1)		; Y points to the buffer
+0000fa e2d8                      	ldi YH, HIGH(char1)
                                  	
-0000f4 e014                      	ldi r17, 4
+0000fb e014                      	ldi r17, 4
                                  	init_loop:				; we put the first 4 chars in the buffer
-0000f5 9105                      		lpm r16, Z+
-0000f6 9309                      		st Y+, r16
-0000f7 951a                      		dec r17
-0000f8 f7e1                      		brne init_loop
+0000fc 9105                      		lpm r16, Z+
+0000fd 9309                      		st Y+, r16
+0000fe 951a                      		dec r17
+0000ff f7e1                      		brne init_loop
                                  
-0000f9 df91                      	rcall text2bin_all
-0000fa 9508                      	ret
+000100 df8a                      	rcall text2bin_all
+000101 9508                      	ret
                                  
                                  shift_buffer:
-0000fb 94f8                      	cli
-0000fc 93ef                      	push ZL
-0000fd 93ff                      	push ZH
-0000fe 93cf                      	push YL
-0000ff 93df                      	push YH
-000100 933f                      	push r19
-000101 932f                      	push r18
-000102 931f                      	push r17
-000103 930f                      	push r16
-000104 b70f                      	in r16, CPU_SREG
-000105 930f                      	push r16
+000102 94f8                      	cli
+000103 93ef                      	push ZL
+000104 93ff                      	push ZH
+000105 93cf                      	push YL
+000106 93df                      	push YH
+000107 933f                      	push r19
+000108 932f                      	push r18
+000109 931f                      	push r17
+00010a 930f                      	push r16
+00010b b70f                      	in r16, CPU_SREG
+00010c 930f                      	push r16
                                  
-000106 ecea                      	ldi ZL, LOW(text<<1)
-000107 e0f2                      	ldi ZH, HIGH(text<<1)
-000108 9120 2809                 	lds r18, current_letter
-00010a e010                      	ldi r17, $00
-00010b 0fe2                      	add ZL, r18
-00010c 1ff1                      	adc ZH, r17
+00010d ede8                      	ldi ZL, LOW(text<<1)
+00010e e0f2                      	ldi ZH, HIGH(text<<1)
+00010f 9120 2809                 	lds r18, current_letter
+000111 e010                      	ldi r17, $00
+000112 0fe2                      	add ZL, r18
+000113 1ff1                      	adc ZH, r17
                                  	
-00010d e0c4                      	ldi YL, LOW(char1)	;shift the char variables
-00010e e2d8                      	ldi YH, HIGH(char1)
+000114 e0c4                      	ldi YL, LOW(char1)	;shift the char variables
+000115 e2d8                      	ldi YH, HIGH(char1)
                                  
-00010f e013                      	ldi r17, 3
+000116 e013                      	ldi r17, 3
                                  	shift_loop:
-000110 8109                      		ldd r16, Y+1
-000111 9309                      		st Y+, r16
-000112 951a                      		dec r17
-000113 f7e1                      		brne shift_loop
+000117 8109                      		ldd r16, Y+1
+000118 9309                      		st Y+, r16
+000119 951a                      		dec r17
+00011a f7e1                      		brne shift_loop
                                  
-000114 9120 2808                 	lds r18, text_len
-000116 9130 2809                 	lds r19, current_letter
-000118 1732                      	cp r19, r18		
-000119 f490                      	brsh rollover
+00011b 9120 2808                 	lds r18, text_len
+00011d 9130 2809                 	lds r19, current_letter
+00011f 1732                      	cp r19, r18		
+000120 f490                      	brsh rollover
                                  
                                  	shift:
-00011a 9533                      		inc r19						;increment letter position
-00011b 9330 2809                 		sts current_letter, r19
-00011d 9105                      		lpm r16, Z+
-00011e 8308                      		st Y, r16
-00011f df63                      		rcall text2bin_last_char
+000121 9533                      		inc r19						;increment letter position
+000122 9330 2809                 		sts current_letter, r19
+000124 9105                      		lpm r16, Z+
+000125 8308                      		st Y, r16
+000126 df5c                      		rcall text2bin_last_char
                                  
-000120 910f                      	pop r16
-000121 bf0f                      	out CPU_SREG, r16
-000122 910f                      	pop r16
-000123 911f                      	pop r17
-000124 912f                      	pop r18
-000125 913f                      	pop r19
-000126 91df                      	pop YH
-000127 91cf                      	pop YL
-000128 91ff                      	pop ZH
-000129 91ef                      	pop ZL
+000127 910f                      	pop r16
+000128 bf0f                      	out CPU_SREG, r16
+000129 910f                      	pop r16
+00012a 911f                      	pop r17
+00012b 912f                      	pop r18
+00012c 913f                      	pop r19
+00012d 91df                      	pop YH
+00012e 91cf                      	pop YL
+00012f 91ff                      	pop ZH
+000130 91ef                      	pop ZL
                                  
-00012a 9478                      	sei
-00012b 9508                      	ret
+000131 9478                      	sei
+000132 9508                      	ret
                                  
                                  	rollover:
-00012c ecea                      		ldi ZL, LOW(text<<1)	;reset Z pointer if 
-00012d e0f2                      		ldi ZH, HIGH(text<<1)
-00012e 9104                      		lpm r16, Z
-00012f 8308                      		st Y, r16
+000133 ede8                      		ldi ZL, LOW(text<<1)	;reset Z pointer if 
+000134 e0f2                      		ldi ZH, HIGH(text<<1)
+000135 9104                      		lpm r16, Z
+000136 8308                      		st Y, r16
                                  		
                                  
-000130 e031                      		ldi r19, 1
-000131 9330 2809                 		sts current_letter, r19
+000137 e031                      		ldi r19, 1
+000138 9330 2809                 		sts current_letter, r19
                                  
-000133 df4f                      		rcall text2bin_last_char
+00013a df48                      		rcall text2bin_last_char
                                  
-000134 910f                      	pop r16
-000135 bf0f                      	out CPU_SREG, r16
-000136 910f                      	pop r16
-000137 911f                      	pop r17
-000138 912f                      	pop r18
-000139 913f                      	pop r19
-00013a 91df                      	pop YH
-00013b 91cf                      	pop YL
-00013c 91ff                      	pop ZH
-00013d 91ef                      	pop ZL
+00013b 910f                      	pop r16
+00013c bf0f                      	out CPU_SREG, r16
+00013d 910f                      	pop r16
+00013e 911f                      	pop r17
+00013f 912f                      	pop r18
+000140 913f                      	pop r19
+000141 91df                      	pop YH
+000142 91cf                      	pop YL
+000143 91ff                      	pop ZH
+000144 91ef                      	pop ZL
                                  
-00013e 9508                      	ret
+000145 9508                      	ret
                                  
                                  
                                  /*	
@@ -4903,56 +4914,69 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
                                  		*/
                                  
                                  turn_off_digit:
-00013f 930f                      	push r16
-000140 ef0f                      	ldi r16, 0xFF
-000141 b901                      	out VPORTA_OUT, r16
-000142 910f                      	pop r16
-000143 9508                      	ret
+000146 930f                      	push r16
+000147 ef0f                      	ldi r16, 0xFF
+000148 b901                      	out VPORTA_OUT, r16
+000149 910f                      	pop r16
+00014a 9508                      	ret
                                  
                                  delay:
-000144 932f                      	push r18
-000145 b72f                      	in r18, CPU_SREG
-000146 932f                      	push r18
-000147 931f                      	push r17
+00014b 932f                      	push r18
+00014c b72f                      	in r18, CPU_SREG
+00014d 932f                      	push r18
+00014e 931f                      	push r17
                                  
-000148 e020                      	ldi r18, 0
+00014f e020                      	ldi r18, 0
                                  delayouter:
-000149 e010                      	ldi r17, 0
+000150 e010                      	ldi r17, 0
                                  delayinner:
-00014a 951a                      	dec r17
-00014b f7f1                      	brne delayinner
-00014c 952a                      	dec r18
-00014d f7d9                      	brne delayouter
+000151 951a                      	dec r17
+000152 f7f1                      	brne delayinner
+000153 952a                      	dec r18
+000154 f7d9                      	brne delayouter
                                  
-00014e 911f                      	pop r17
-00014f 912f                      	pop r18
-000150 bf2f                      	out CPU_SREG, r18
-000151 912f                      	pop r18
-000152 9508                      	ret
+000155 911f                      	pop r17
+000156 912f                      	pop r18
+000157 bf2f                      	out CPU_SREG, r18
+000158 912f                      	pop r18
+000159 9508                      	ret
                                  
                                  
-                                 ;starts with 0-9
-000153 d703
-000154 c161
-000155 8995
-000156 d309
-000157 9101                      numbers: .db $03,$D7,$61,$C1,$95,$89,$09,$D3,$01,$91
-000158 0d11
-000159 452b
-00015a 3929
-00015b 1581
-00015c cbd7
-00015d 2f19
-00015e 5d59
-00015f 314d
-000160 7d91
-000161 2d89
-000162 a74f
-000163 5fa5
-000164 6385                      letters: .db $11,$0D,$2B,$45,$29,$39,$81,$15,$D7,$CB,$19,$2F,$59,$5D,$4D,$31,$91,$7D,$89,$2D,$4F,$A7,$A5,$5F,$85,$63
-000165 4544
-000166 5a45
-000167 554e
+                                 ; numbers is the segment values for 0-9
+                                 ; letters are the segment values for A-Z
+                                 ; text is the actual text you want to display and uses '/' as end of line
+00015a d703
+00015b c161
+00015c 8995
+00015d d309
+00015e 9101                      numbers: .db $03,$D7,$61,$C1,$95,$89,$09,$D3,$01,$91
+00015f 0d11
+000160 452b
+000161 3929
+000162 1581
+000163 cbd7
+000164 2f19
+000165 5d59
+000166 314d
+000167 7d91
+000168 2d89
+000169 a74f
+00016a 5fa5
+00016b 6385                      letters: .db $11,$0D,$2B,$45,$29,$39,$81,$15,$D7,$CB,$19,$2F,$59,$5D,$4D,$31,$91,$7D,$89,$2D,$4F,$A7,$A5,$5F,$85,$63
+00016c 4241
+00016d 4443
+00016e 4645
+00016f 4847
+000170 4a49
+000171 4c4b
+000172 4e4d
+000173 504f
+000174 5251
+000175 5453
+000176 5655
+000177 5857
+000178 5a59
+C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm(436): warning: .cseg .db misalignment - padding zero byte
 
 
 RESOURCE USE INFORMATION
@@ -4970,11 +4994,11 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega4809" register use summary:
-x  :   0 y  :   5 z  :  11 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   0 y  :   5 z  :  12 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  84 r17:  20 r18:  25 r19:  23 r20:   2 
+r13:   0 r14:   0 r15:   0 r16:  86 r17:  22 r18:  25 r19:  23 r20:   2 
 r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   5 
-r29:   5 r30:  18 r31:  18 
+r29:   5 r30:  19 r31:  19 
 Registers used: 11 out of 35 (31.4%)
 
 "ATmega4809" instruction use summary:
@@ -4982,13 +5006,13 @@ Registers used: 11 out of 35 (31.4%)
 andi  :   1 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   4 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
+brne  :   5 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   2 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   2 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   1 cpc   :   0 
-cpi   :   1 cpse  :   0 dec   :   4 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   5 inc   :   1 jmp   :   0 
-ld    :   0 ldd   :   1 ldi   :  39 lds   :  17 lpm   :  12 lsl   :   0 
+cpi   :   2 cpse  :   0 dec   :   5 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   5 inc   :   2 jmp   :   0 
+ld    :   0 ldd   :   1 ldi   :  41 lds   :  17 lpm   :  13 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
 neg   :   0 nop   :   2 or    :   0 ori   :   1 out   :  13 pop   :  34 
 push  :  24 rcall :  12 ret   :   8 reti  :   2 rjmp  :   6 rol   :   0 
@@ -5002,8 +5026,8 @@ Instructions used: 33 out of 112 (29.5%)
 "ATmega4809" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0002d2    540     44    584   49152   1.2%
+[.cseg] 0x000000 0x0002f4    554     64    618   49152   1.3%
 [.dseg] 0x002800 0x00280a      0     10     10    6144   0.2%
 [.eseg] 0x000000 0x000000      0      0      0     256   0.0%
 
-Assembly complete, 0 errors, 0 warnings
+Assembly complete, 0 errors, 1 warnings
