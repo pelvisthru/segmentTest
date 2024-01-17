@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm Sun Jan 14 22:13:40 2024
+AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm Wed Jan 17 01:40:00 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -3028,28 +3028,36 @@ DSEG char2        00002805
 DSEG char3        00002806
 DSEG char4        00002807
 DSEG text_len     00002808
-DSEG current_letter 00002809
+DSEG current_letter_begin 00002809
+DSEG current_letter 0000280a
 CSEG RESET        00000000
 CSEG start        00000047
-CSEG porte_isr    00000066
-CSEG shifting_text_init 000000ec
-CSEG main         00000062
-CSEG display_text 000000a4
-CSEG button_pressed 00000078
-CSEG button_released 0000006d
-CSEG wait_for_0   00000078
-CSEG delay        0000014d
-CSEG shift_buffer_up 00000104
-CSEG text2bin_last_char 00000085
-CSEG text2bin_all 0000008d
-CSEG letters      00000161
-CSEG turn_off_digit 00000148
-CSEG text         0000016e
-CSEG not_EOL      000000ef
-CSEG init_loop    000000fe
-CSEG shift_loop   00000119
-CSEG rollover     00000135
-CSEG shift        00000123
-CSEG delayouter   00000152
-CSEG delayinner   00000153
-CSEG numbers      0000015c
+CSEG porte_isr    0000006c
+CSEG shifting_text_init 000000a1
+CSEG main         00000068
+CSEG display_text 0000016c
+CSEG button_pressed_up 0000007e
+CSEG button_pressed_down 0000008f
+CSEG button_released_up 00000073
+CSEG wait_for_0   0000007e
+CSEG delay        000001b9
+CSEG shift_buffer_left 000000bc
+CSEG button_released_down 00000084
+CSEG wait_for_0_down 0000008f
+CSEG shift_buffer_right 00000100
+CSEG text         000001da
+CSEG not_EOL      000000a4
+CSEG init_loop    000000b6
+CSEG text2bin_all 00000155
+CSEG shift_loop   000000d1
+CSEG rollover     000000ed
+CSEG shift        000000db
+CSEG text2bin_last_char 0000014d
+CSEG shift_loop_down 00000115
+CSEG rollunder    00000133
+CSEG shift_down   0000011e
+CSEG letters      000001cd
+CSEG turn_off_digit 000001b4
+CSEG delayouter   000001be
+CSEG delayinner   000001bf
+CSEG numbers      000001c8

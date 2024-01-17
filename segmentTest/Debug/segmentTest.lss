@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm Sun Jan 14 22:13:40 2024
+AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm Wed Jan 17 01:40:00 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
@@ -4535,14 +4535,15 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
                                  
                                  	;length of text
 002808                           	text_len: .byte	1
-002809                           	current_letter: .byte 1
+002809                           	current_letter_begin: .byte 1
+00280a                           	current_letter: .byte 1
                                  
                                  .cseg
                                  RESET:
 000000 c046                      	rjmp start
                                  
                                  .org PORTE_PORT_vect
-000046 c01f                      	rjmp porte_isr
+000046 c025                      	rjmp porte_isr
                                  
                                  start:
                                  	; Configure digit addresses
@@ -4575,327 +4576,339 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
                                  
                                  	; Enable switch as input
 00005a 9880                      	cbi VPORTE_DIR, 0
+00005b 9882                      	cbi VPORTE_DIR, 2
                                  
-00005b 9100 0490                 	lds r16, PORTE_PIN0CTRL ;set ISC for PE0 to falling edge
-00005d 600b                      	ori r16, 0x03 | PORT_PULLUPEN_bm
-                                 	;ori r16, PORT_PULLUPEN_bm	;enable pullup resistor
-00005e 9300 0490                 	sts PORTE_PIN0CTRL, r16
+00005c 9100 0490                 	lds r16, PORTE_PIN0CTRL		;set ISC for PE0 to falling edge and enable pullup
+00005e 600b                      	ori r16, 0x03 | PORT_PULLUPEN_bm
+00005f 9300 0490                 	sts PORTE_PIN0CTRL, r16
+                                 	
+000061 9100 0492                 	lds r16, PORTE_PIN2CTRL		;set ISC for PE2 to falling edge and enable pullup
+000063 600b                      	ori r16, 0x03 | PORT_PULLUPEN_bm
+000064 9300 0492                 	sts PORTE_PIN2CTRL, r16
                                  
-000060 9478                      	sei				;enable global interrupts
+000066 9478                      	sei				;enable global interrupts
                                  
-                                 ;6, 21, 3, 11
-                                 
-                                 
-                                 ; change with ascii chars, version 1
-                                 /*
-                                 	ldi r16, 'S'
-                                 	sts char1, r16
-                                 
-                                 	ldi r16, 'T'
-                                 	sts char2, r16
-                                 
-                                 	ldi r16, 'O'
-                                 	sts char3, r16
-                                 
-                                 	ldi r16, 'P'
-                                 	sts char4, r16
-                                 
-                                 	rcall text2bin_all
-                                 	*/
-                                 
-000061 d08a                      rcall shifting_text_init
+000067 d039                      	rcall shifting_text_init
                                  
                                  main:
-000062 0000                      	nop
-000063 0000                      	nop
-000064 d03f                      	rcall display_text
-000065 cffc                      	rjmp main
+000068 0000                      	nop
+000069 0000                      	nop
+00006a d101                      	rcall display_text
+00006b cffc                      	rjmp main
                                  
                                  porte_isr:
-000066 94f8                      	cli
+00006c 94f8                      	cli
                                  
-000067 b70f                      	in r16, CPU_SREG
-000068 930f                      	push r16
+00006d b70f                      	in r16, CPU_SREG
+00006e 930f                      	push r16
                                  
-000069 b302                      	in r16, VPORTE_IN
-00006a 7001                          andi r16, (1 << 0)  ; Mask only the bit corresponding to the button
-00006b 3000                          cpi r16, 0
-00006c f059                          breq button_pressed
+                                 	; change implementation on how button is checked
+                                 	;in r16, VPORTE_IN
+                                     ;andi r16, (1 << 0)  ; Mask only the bit corresponding to the button
+                                     ;cpi r16, 0
                                  
+00006f 9b90                      	sbis VPORTE_IN, 0
+000070 c00d                          rjmp button_pressed_up
                                  
-                                 	button_released:
+000071 9b92                      	sbis VPORTE_IN, 2
+000072 c01c                          rjmp button_pressed_down
+                                 
+                                 	button_released_up:
                                      ; Handle button release
                                  		;rcall delay
-00006d 9b90                      		sbis VPORTE_IN, 0 ;check for 1 (indicating that the button was let go)
-00006e cffe                      		rjmp button_released
+000073 9b90                      		sbis VPORTE_IN, 0 ;check for 1 (indicating that the button was let go)
+000074 cffe                      		rjmp button_released_up
                                  
-00006f 910f                      		pop r16
-000070 bf0f                      		out CPU_SREG, r16
+000075 910f                      		pop r16
+000076 bf0f                      		out CPU_SREG, r16
                                  
-000071 9100 0489                 		lds r16, PORTE_INTFLAGS
-000073 6001                      		ori r16, PORT_INT0_bm
-000074 9300 0489                 		sts PORTE_INTFLAGS, r16
+000077 9100 0489                 		lds r16, PORTE_INTFLAGS
+000079 6001                      		ori r16, PORT_INT0_bm
+00007a 9300 0489                 		sts PORTE_INTFLAGS, r16
                                  
                                  		;ldi r16, PORT_INT0_bm ;clear IRQ flag for PE0
                                  		;sts PORTE_INTFLAGS, r16
                                  
-000076 9478                      		sei
-000077 9518                      		reti
+00007c 9478                      		sei
+00007d 9518                      		reti
                                  
-                                 	button_pressed:
+                                 	button_pressed_up:
                                      ; Debounce by waiting for a short delay or checking the stable state
                                      ; (You may use a timer or a loop with a delay)
                                      ; Proceed with button handling after debounce
                                  		wait_for_0:
-000078 9990                      			sbic VPORTE_IN, 0 ;wait for PE0 being 0
-000079 cffe                      			rjmp wait_for_0
-00007a d0d2                      			rcall delay ;delay when you see a 0
+00007e 9990                      			sbic VPORTE_IN, 0 ;wait for PE0 being 0
+00007f cffe                      			rjmp wait_for_0
+000080 d138                      			rcall delay ;delay when you see a 0
                                  
-00007b 9998                      			sbic VPORTE_INTFLAGS, 0
-00007c d087                      			rcall shift_buffer_up
+000081 9998                      			sbic VPORTE_INTFLAGS, 0		;check if PE0 (UP pushbutton) is pressed
+000082 d039                      			rcall shift_buffer_left
                                  
-00007d cfef                      			rjmp button_released
+                                 			; REMEMBER TO UNCOMMENT THIS TO TEST ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                 			;sbic VPORTE_INTFLAGS, 2		;check if PE2 (DOWN pushbutton) is pressed
+                                 			;rcall shift_buffer_right
+                                 
+000083 cfef                      			rjmp button_released_up
+                                 
+                                 
+                                 	button_released_down:
+                                     ; Handle button release
+                                 		;rcall delay
+000084 9b92                      		sbis VPORTE_IN, 2 ;check for 1 (indicating that the button was let go)
+000085 cfed                      		rjmp button_released_up
+                                 
+000086 910f                      		pop r16
+000087 bf0f                      		out CPU_SREG, r16
+                                 
+000088 9100 0489                 		lds r16, PORTE_INTFLAGS
+00008a 6004                      		ori r16, PORT_INT2_bm
+00008b 9300 0489                 		sts PORTE_INTFLAGS, r16
+                                 
+00008d 9478                      		sei
+00008e 9518                      		reti
+                                 
+                                 	button_pressed_down:
+                                     ; Debounce by waiting for a short delay or checking the stable state
+                                     ; (You may use a timer or a loop with a delay)
+                                     ; Proceed with button handling after debounce
+                                 		wait_for_0_down:
+00008f 9992                      			sbic VPORTE_IN, 2 ;wait for PE2 being 0
+000090 cffe                      			rjmp wait_for_0_down
+000091 d127                      			rcall delay ;delay when you see a 0
+                                 
+                                 			; REMEMBER TO UNCOMMENT THIS TO TEST ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+000092 999a                      			sbic VPORTE_INTFLAGS, 2		;check if PE2 (DOWN pushbutton) is pressed
+000093 d06c                      			rcall shift_buffer_right
+                                 
+000094 cfef                      			rjmp button_released_down
                                  
                                  
                                  	;ldi r16, PORT_INT0_bm ;clear IRQ flag for PE0
                                  	;sts PORTE_INTFLAGS, r16
                                  
-00007e 9100 0489                 	lds r16, PORTE_INTFLAGS		;clear IRQ flag
-000080 6001                      	ori r16, PORT_INT0_bm
-000081 9300 0489                 	sts PORTE_INTFLAGS, r16
+000095 9100 0489                 	lds r16, PORTE_INTFLAGS		;clear IRQ flag for PE0
+000097 6001                      	ori r16, PORT_INT0_bm
+000098 9300 0489                 	sts PORTE_INTFLAGS, r16
                                  
-000083 9478                      	sei
-000084 9518                      	reti
+00009a 9100 0489                 	lds r16, PORTE_INTFLAGS		;clear IRQ flag for PE2
+00009c 6004                      	ori r16, PORT_INT2_bm
+00009d 9300 0489                 	sts PORTE_INTFLAGS, r16
                                  
-                                 
-                                 text2bin_last_char:
-000085 930f                      	push r16
-000086 9100 2807                 	lds r16, char4
-000088 5401                      	subi r16, 'A'
-000089 9300 2807                 	sts char4, r16
-00008b 910f                      	pop r16
-00008c 9508                      	ret
-                                 
-                                 text2bin_all:
-00008d 930f                      	push r16
-                                 
-00008e 9100 2807                 	lds r16, char4
-000090 5401                      	subi r16, 'A'
-000091 9300 2807                 	sts char4, r16
-                                 
-000093 9100 2806                 	lds r16, char3
-000095 5401                      	subi r16, 'A'
-000096 9300 2806                 	sts char3, r16
-                                 
-000098 9100 2805                 	lds r16, char2
-00009a 5401                      	subi r16, 'A'
-00009b 9300 2805                 	sts char2, r16
-                                 
-00009d 9100 2804                 	lds r16, char1
-00009f 5401                      	subi r16, 'A'
-0000a0 9300 2804                 	sts char1, r16
-                                 
-0000a2 910f                      	pop r16
-0000a3 9508                      	ret
-                                 
-                                 ;put your character offsets into char1 - char4
-                                 display_text:
-0000a4 934f                      	push r20
-0000a5 933f                      	push r19
-0000a6 b73f                      	in r19, CPU_SREG
-0000a7 933f                      	push r19
-0000a8 932f                      	push r18
-0000a9 931f                      	push r17
-0000aa 930f                      	push r16
-0000ab 93ef                      	push ZL
-0000ac 93ff                      	push ZH
-                                 
-0000ad 9130 2803                 	lds r19, digit4				; select digit
-0000af b939                      	out VPORTC_OUT, r19
-                                 
-0000b0 ece2                      	ldi ZL, LOW(letters<<1)		; set pointer to table beginning
-0000b1 e0f2                      	ldi ZH, HIGH(letters<<1)
-                                 
-0000b2 e010                      	ldi r17, $00
-0000b3 9120 2807                 	lds r18, char4				; load offset
-0000b5 0fe2                      	add ZL, r18
-0000b6 1ff1                      	adc ZH, r17					; map to right char
-0000b7 9104                      	lpm r16, Z
-0000b8 9300 0404                 	sts PORTA_OUT, r16			; display letter
-                                 
-0000ba d08d                      	rcall turn_off_digit		; turn digit OFF
-                                 
-0000bb 9130 2802                 	lds r19, digit3
-0000bd b939                      	out VPORTC_OUT, r19
-                                 
-0000be ece2                      	ldi ZL, LOW(letters<<1)
-0000bf e0f2                      	ldi ZH, HIGH(letters<<1)
-                                 
-0000c0 9120 2806                 	lds r18, char3	
-0000c2 0fe2                      	add ZL, r18
-0000c3 1ff1                      	adc ZH, r17
-0000c4 9104                      	lpm r16, Z
-0000c5 9300 0404                 	sts PORTA_OUT, r16
-                                 
-0000c7 d080                      	rcall turn_off_digit
-                                 
-0000c8 9130 2801                 	lds r19, digit2
-0000ca b939                      	out VPORTC_OUT, r19
-                                 
-0000cb ece2                      	ldi ZL, LOW(letters<<1)
-0000cc e0f2                      	ldi ZH, HIGH(letters<<1)
-                                 
-0000cd 9120 2805                 	lds r18, char2
-0000cf 0fe2                      	add ZL, r18
-0000d0 1ff1                      	adc ZH, r17
-0000d1 9104                      	lpm r16, Z
-0000d2 9300 0404                 	sts PORTA_OUT, r16
-                                 
-0000d4 d073                      	rcall turn_off_digit
-                                 
-0000d5 9130 2800                 	lds r19, digit1
-0000d7 b939                      	out VPORTC_OUT, r19
-                                 
-0000d8 ece2                      	ldi ZL, LOW(letters<<1)
-0000d9 e0f2                      	ldi ZH, HIGH(letters<<1)
-                                 
-0000da 9120 2804                 	lds r18, char1
-0000dc 0fe2                      	add ZL, r18
-0000dd 1ff1                      	adc ZH, r17
-0000de 9104                      	lpm r16, Z
-0000df 9300 0404                 	sts PORTA_OUT, r16
-                                 	
-0000e1 d066                      	rcall turn_off_digit
-                                 
-0000e2 91ff                      	pop ZH
-0000e3 91ef                      	pop ZL
-0000e4 910f                      	pop r16
-0000e5 911f                      	pop r17
-0000e6 912f                      	pop r18
-0000e7 913f                      	pop r19
-0000e8 bf3f                      	out CPU_SREG, r19
-0000e9 913f                      	pop r19
-0000ea 914f                      	pop r20
-                                 
-0000eb 9508                      	ret
+00009f 9478                      	sei
+0000a0 9518                      	reti
                                  
                                  shifting_text_init:
                                  	;init text length
-0000ec edec                      	ldi ZL, LOW(text<<1)	; Z points to the text we want to input
-0000ed e0f2                      	ldi ZH, HIGH(text<<1)
-                                 
+0000a1 ebe4                      	ldi ZL, LOW(text<<1)	; Z points to the text we want to input
+0000a2 e0f3                      	ldi ZH, HIGH(text<<1)
                                  	
-0000ee e000                      	ldi r16, 0
+                                 	; reading how long the text is
+0000a3 e000                      	ldi r16, 0
                                  	not_EOL:
-0000ef 9115                      		lpm r17, Z+
-0000f0 9503                      		inc r16
-0000f1 321f                      		cpi r17, '/'
-0000f2 f7e1                      		brne not_EOL
+0000a4 9115                      		lpm r17, Z+
+0000a5 9503                      		inc r16
+0000a6 321f                      		cpi r17, '/'
+0000a7 f7e1                      		brne not_EOL
                                  
-0000f3 950a                      	dec r16
-0000f4 9300 2808                 	sts text_len, r16
+0000a8 950a                      	dec r16			; to fix to proper text length
+0000a9 9300 2808                 	sts text_len, r16
                                  
-                                 	;init current letter position
-0000f6 e004                      	ldi r16, 4
-0000f7 9300 2809                 	sts current_letter, r16
+                                 	;init current letter positions
+0000ab e001                      	ldi r16, 1
+0000ac 9300 2809                 	sts current_letter_begin, r16
+0000ae e004                      	ldi r16, 4
+0000af 9300 280a                 	sts current_letter, r16
                                  
                                  	;initialize the buffer
-0000f9 edec                      	ldi ZL, LOW(text<<1)	; Z points to the text we want to input
-0000fa e0f2                      	ldi ZH, HIGH(text<<1)
+0000b1 ebe4                      	ldi ZL, LOW(text<<1)	; Z points to the text we want to input
+0000b2 e0f3                      	ldi ZH, HIGH(text<<1)
                                  
-0000fb e0c4                      	ldi YL, LOW(char1)		; Y points to the buffer
-0000fc e2d8                      	ldi YH, HIGH(char1)
+0000b3 e0c4                      	ldi YL, LOW(char1)		; Y points to the buffer
+0000b4 e2d8                      	ldi YH, HIGH(char1)
                                  	
-0000fd e014                      	ldi r17, 4
+0000b5 e014                      	ldi r17, 4
                                  	init_loop:				; we put the first 4 chars in the buffer
-0000fe 9105                      		lpm r16, Z+
-0000ff 9309                      		st Y+, r16
-000100 951a                      		dec r17
-000101 f7e1                      		brne init_loop
+0000b6 9105                      		lpm r16, Z+
+0000b7 9309                      		st Y+, r16
+0000b8 951a                      		dec r17
+0000b9 f7e1                      		brne init_loop
                                  
-000102 df8a                      	rcall text2bin_all
-000103 9508                      	ret
+0000ba d09a                      	rcall text2bin_all
+0000bb 9508                      	ret
                                  
-                                 shift_buffer_up:
-000104 94f8                      	cli
-000105 93ef                      	push ZL
-000106 93ff                      	push ZH
-000107 93cf                      	push YL
-000108 93df                      	push YH
-000109 933f                      	push r19
-00010a 932f                      	push r18
-00010b 931f                      	push r17
-00010c 930f                      	push r16
-00010d b70f                      	in r16, CPU_SREG
-00010e 930f                      	push r16
+                                 shift_buffer_left:
+0000bc 94f8                      	cli
+0000bd 93ef                      	push ZL
+0000be 93ff                      	push ZH
+0000bf 93cf                      	push YL
+0000c0 93df                      	push YH
+0000c1 933f                      	push r19
+0000c2 932f                      	push r18
+0000c3 931f                      	push r17
+0000c4 930f                      	push r16
+0000c5 b70f                      	in r16, CPU_SREG
+0000c6 930f                      	push r16
                                  
-00010f edec                      	ldi ZL, LOW(text<<1)
-000110 e0f2                      	ldi ZH, HIGH(text<<1)
-000111 9120 2809                 	lds r18, current_letter
-000113 e010                      	ldi r17, $00
-000114 0fe2                      	add ZL, r18
-000115 1ff1                      	adc ZH, r17
+0000c7 ebe4                      	ldi ZL, LOW(text<<1)
+0000c8 e0f3                      	ldi ZH, HIGH(text<<1)
+0000c9 9120 280a                 	lds r18, current_letter
+0000cb e010                      	ldi r17, $00
+0000cc 0fe2                      	add ZL, r18
+0000cd 1ff1                      	adc ZH, r17
                                  	
-000116 e0c4                      	ldi YL, LOW(char1)	;shift the char variables
-000117 e2d8                      	ldi YH, HIGH(char1)
+0000ce e0c4                      	ldi YL, LOW(char1)	;shift the char variables
+0000cf e2d8                      	ldi YH, HIGH(char1)
                                  
-000118 e013                      	ldi r17, 3
+0000d0 e013                      	ldi r17, 3
                                  	shift_loop:
-000119 8109                      		ldd r16, Y+1
-00011a 9309                      		st Y+, r16
-00011b 951a                      		dec r17
-00011c f7e1                      		brne shift_loop
+0000d1 8109                      		ldd r16, Y+1
+0000d2 9309                      		st Y+, r16
+0000d3 951a                      		dec r17
+0000d4 f7e1                      		brne shift_loop
                                  
-00011d 9120 2808                 	lds r18, text_len
-00011f 9130 2809                 	lds r19, current_letter
-000121 1732                      	cp r19, r18		
-000122 f490                      	brsh rollover
+0000d5 9120 2808                 	lds r18, text_len
+0000d7 9130 280a                 	lds r19, current_letter
+0000d9 1732                      	cp r19, r18		
+0000da f490                      	brsh rollover
                                  
                                  	shift:
-000123 9533                      		inc r19						;increment letter position
-000124 9330 2809                 		sts current_letter, r19
-000126 9105                      		lpm r16, Z+
-000127 8308                      		st Y, r16
-000128 df5c                      		rcall text2bin_last_char
+0000db 9533                      		inc r19						;increment letter position
+0000dc 9330 280a                 		sts current_letter, r19
+0000de 9105                      		lpm r16, Z+
+0000df 8308                      		st Y, r16
+0000e0 d06c                      		rcall text2bin_last_char
                                  
-000129 910f                      	pop r16
-00012a bf0f                      	out CPU_SREG, r16
-00012b 910f                      	pop r16
-00012c 911f                      	pop r17
-00012d 912f                      	pop r18
-00012e 913f                      	pop r19
-00012f 91df                      	pop YH
-000130 91cf                      	pop YL
-000131 91ff                      	pop ZH
-000132 91ef                      	pop ZL
+0000e1 910f                      	pop r16
+0000e2 bf0f                      	out CPU_SREG, r16
+0000e3 910f                      	pop r16
+0000e4 911f                      	pop r17
+0000e5 912f                      	pop r18
+0000e6 913f                      	pop r19
+0000e7 91df                      	pop YH
+0000e8 91cf                      	pop YL
+0000e9 91ff                      	pop ZH
+0000ea 91ef                      	pop ZL
                                  
-000133 9478                      	sei
-000134 9508                      	ret
+0000eb 9478                      	sei
+0000ec 9508                      	ret
                                  
                                  	rollover:
-000135 edec                      		ldi ZL, LOW(text<<1)	;reset Z pointer if 
-000136 e0f2                      		ldi ZH, HIGH(text<<1)
-000137 9104                      		lpm r16, Z
-000138 8308                      		st Y, r16
+0000ed ebe4                      		ldi ZL, LOW(text<<1)	;reset Z pointer if same length of text
+0000ee e0f3                      		ldi ZH, HIGH(text<<1)
+0000ef 9104                      		lpm r16, Z
+0000f0 8308                      		st Y, r16
                                  		
                                  
-000139 e031                      		ldi r19, 1
-00013a 9330 2809                 		sts current_letter, r19
+0000f1 e031                      		ldi r19, 1
+0000f2 9330 280a                 		sts current_letter, r19
                                  
-00013c df48                      		rcall text2bin_last_char
+0000f4 d058                      		rcall text2bin_last_char
                                  
-00013d 910f                      	pop r16
-00013e bf0f                      	out CPU_SREG, r16
-00013f 910f                      	pop r16
-000140 911f                      	pop r17
-000141 912f                      	pop r18
-000142 913f                      	pop r19
-000143 91df                      	pop YH
-000144 91cf                      	pop YL
-000145 91ff                      	pop ZH
-000146 91ef                      	pop ZL
+0000f5 910f                      	pop r16
+0000f6 bf0f                      	out CPU_SREG, r16
+0000f7 910f                      	pop r16
+0000f8 911f                      	pop r17
+0000f9 912f                      	pop r18
+0000fa 913f                      	pop r19
+0000fb 91df                      	pop YH
+0000fc 91cf                      	pop YL
+0000fd 91ff                      	pop ZH
+0000fe 91ef                      	pop ZL
                                  
-000147 9508                      	ret
+0000ff 9508                      	ret
+                                 
+                                 
+                                 shift_buffer_right:
+000100 94f8                      	cli
+000101 93ef                      	push ZL
+000102 93ff                      	push ZH
+000103 93cf                      	push YL
+000104 93df                      	push YH
+000105 933f                      	push r19
+000106 932f                      	push r18
+000107 931f                      	push r17
+000108 930f                      	push r16
+000109 b70f                      	in r16, CPU_SREG
+00010a 930f                      	push r16
+                                 
+00010b ebe4                      	ldi ZL, LOW(text<<1)
+00010c e0f3                      	ldi ZH, HIGH(text<<1)
+00010d 9120 2809                 	lds r18, current_letter_begin
+00010f e010                      	ldi r17, $00
+000110 0fe2                      	add ZL, r18
+000111 1ff1                      	adc ZH, r17
+                                 	
+000112 e0c7                      	ldi YL, LOW(char1 + 3)	;shift the char variables
+000113 e2d8                      	ldi YH, HIGH(char1 + 3)
+                                 
+000114 e013                      	ldi r17, 3
+                                 	shift_loop_down:
+000115 910a                      		ld r16, -Y
+000116 8309                      		std Y+1, r16
+000117 951a                      		dec r17
+000118 f7e1                      		brne shift_loop_down
+                                 
+000119 e021                      	ldi r18, 1			
+00011a 9130 2809                 	lds r19, current_letter_begin
+00011c 1723                      	cp r18, r19	
+00011d f0a8                      	brlo rollunder
+                                 
+                                 	shift_down:
+00011e 953a                      		dec r19						;decrement letter position
+00011f 9330 2809                 		sts current_letter_begin, r19
+000121 9104                      		lpm r16, Z
+000122 e010                      		ldi r17, $00
+000123 50e1                      		subi ZL, 1
+000124 0bf1                      		sbc ZH, r17
+000125 8308                      		st Y, r16
+000126 d026                      		rcall text2bin_last_char
+                                 
+000127 910f                      	pop r16
+000128 bf0f                      	out CPU_SREG, r16
+000129 910f                      	pop r16
+00012a 911f                      	pop r17
+00012b 912f                      	pop r18
+00012c 913f                      	pop r19
+00012d 91df                      	pop YH
+00012e 91cf                      	pop YL
+00012f 91ff                      	pop ZH
+000130 91ef                      	pop ZL
+                                 
+000131 9478                      	sei
+000132 9508                      	ret
+                                 
+                                 	rollunder:
+000133 ebe4                      		ldi ZL, LOW(text<<1)	;reset Z pointer if reaches 0 to end of line
+000134 e0f3                      		ldi ZH, HIGH(text<<1)
+                                 
+000135 e000                      		ldi r16, $00
+000136 9110 2808                 		lds r17, text_len
+000138 951a                      		dec r17
+000139 0fe1                      		add ZL, r17
+00013a 1ff0                      		adc ZH, r16	
+                                 
+00013b 9104                      		lpm r16, Z
+00013c 8308                      		st Y, r16
+                                 		
+                                 
+00013d e031                      		ldi r19, 1
+00013e 9330 2809                 		sts current_letter_begin, r19
+                                 
+000140 d00c                      		rcall text2bin_last_char
+                                 
+000141 910f                      	pop r16
+000142 bf0f                      	out CPU_SREG, r16
+000143 910f                      	pop r16
+000144 911f                      	pop r17
+000145 912f                      	pop r18
+000146 913f                      	pop r19
+000147 91df                      	pop YH
+000148 91cf                      	pop YL
+000149 91ff                      	pop ZH
+00014a 91ef                      	pop ZL
+                                 
+00014b 9478                      	sei
+00014c 9508                      	ret
                                  
                                  
                                  /*	
@@ -4917,70 +4930,181 @@ AVRASM ver. 2.2.8  C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segment
                                  		rjmp again
                                  		*/
                                  
+                                 text2bin_last_char:
+00014d 930f                      	push r16
+00014e 9100 2807                 	lds r16, char4
+000150 5401                      	subi r16, 'A'
+000151 9300 2807                 	sts char4, r16
+000153 910f                      	pop r16
+000154 9508                      	ret
+                                 
+                                 text2bin_all:
+000155 930f                      	push r16
+                                 
+000156 9100 2807                 	lds r16, char4
+000158 5401                      	subi r16, 'A'
+000159 9300 2807                 	sts char4, r16
+                                 
+00015b 9100 2806                 	lds r16, char3
+00015d 5401                      	subi r16, 'A'
+00015e 9300 2806                 	sts char3, r16
+                                 
+000160 9100 2805                 	lds r16, char2
+000162 5401                      	subi r16, 'A'
+000163 9300 2805                 	sts char2, r16
+                                 
+000165 9100 2804                 	lds r16, char1
+000167 5401                      	subi r16, 'A'
+000168 9300 2804                 	sts char1, r16
+                                 
+00016a 910f                      	pop r16
+00016b 9508                      	ret
+                                 
+                                 ;put your character offsets into char1 - char4
+                                 display_text:
+00016c 934f                      	push r20
+00016d 933f                      	push r19
+00016e b73f                      	in r19, CPU_SREG
+00016f 933f                      	push r19
+000170 932f                      	push r18
+000171 931f                      	push r17
+000172 930f                      	push r16
+000173 93ef                      	push ZL
+000174 93ff                      	push ZH
+                                 
+000175 9130 2803                 	lds r19, digit4				; select digit
+000177 b939                      	out VPORTC_OUT, r19
+                                 
+000178 e9ea                      	ldi ZL, LOW(letters<<1)		; set pointer to table beginning
+000179 e0f3                      	ldi ZH, HIGH(letters<<1)
+                                 
+00017a e010                      	ldi r17, $00
+00017b 9120 2807                 	lds r18, char4				; load offset
+00017d 0fe2                      	add ZL, r18
+00017e 1ff1                      	adc ZH, r17					; map to right char
+00017f 9104                      	lpm r16, Z
+000180 9300 0404                 	sts PORTA_OUT, r16			; display letter
+                                 
+000182 d031                      	rcall turn_off_digit		; turn digit OFF
+                                 
+000183 9130 2802                 	lds r19, digit3
+000185 b939                      	out VPORTC_OUT, r19
+                                 
+000186 e9ea                      	ldi ZL, LOW(letters<<1)
+000187 e0f3                      	ldi ZH, HIGH(letters<<1)
+                                 
+000188 9120 2806                 	lds r18, char3	
+00018a 0fe2                      	add ZL, r18
+00018b 1ff1                      	adc ZH, r17
+00018c 9104                      	lpm r16, Z
+00018d 9300 0404                 	sts PORTA_OUT, r16
+                                 
+00018f d024                      	rcall turn_off_digit
+                                 
+000190 9130 2801                 	lds r19, digit2
+000192 b939                      	out VPORTC_OUT, r19
+                                 
+000193 e9ea                      	ldi ZL, LOW(letters<<1)
+000194 e0f3                      	ldi ZH, HIGH(letters<<1)
+                                 
+000195 9120 2805                 	lds r18, char2
+000197 0fe2                      	add ZL, r18
+000198 1ff1                      	adc ZH, r17
+000199 9104                      	lpm r16, Z
+00019a 9300 0404                 	sts PORTA_OUT, r16
+                                 
+00019c d017                      	rcall turn_off_digit
+                                 
+00019d 9130 2800                 	lds r19, digit1
+00019f b939                      	out VPORTC_OUT, r19
+                                 
+0001a0 e9ea                      	ldi ZL, LOW(letters<<1)
+0001a1 e0f3                      	ldi ZH, HIGH(letters<<1)
+                                 
+0001a2 9120 2804                 	lds r18, char1
+0001a4 0fe2                      	add ZL, r18
+0001a5 1ff1                      	adc ZH, r17
+0001a6 9104                      	lpm r16, Z
+0001a7 9300 0404                 	sts PORTA_OUT, r16
+                                 	
+0001a9 d00a                      	rcall turn_off_digit
+                                 
+0001aa 91ff                      	pop ZH
+0001ab 91ef                      	pop ZL
+0001ac 910f                      	pop r16
+0001ad 911f                      	pop r17
+0001ae 912f                      	pop r18
+0001af 913f                      	pop r19
+0001b0 bf3f                      	out CPU_SREG, r19
+0001b1 913f                      	pop r19
+0001b2 914f                      	pop r20
+                                 
+0001b3 9508                      	ret
+                                 
                                  turn_off_digit:
-000148 930f                      	push r16
-000149 ef0f                      	ldi r16, 0xFF
-00014a b901                      	out VPORTA_OUT, r16
-00014b 910f                      	pop r16
-00014c 9508                      	ret
+0001b4 930f                      	push r16
+0001b5 ef0f                      	ldi r16, 0xFF
+0001b6 b901                      	out VPORTA_OUT, r16
+0001b7 910f                      	pop r16
+0001b8 9508                      	ret
                                  
                                  delay:
-00014d 932f                      	push r18
-00014e b72f                      	in r18, CPU_SREG
-00014f 932f                      	push r18
-000150 931f                      	push r17
+0001b9 932f                      	push r18
+0001ba b72f                      	in r18, CPU_SREG
+0001bb 932f                      	push r18
+0001bc 931f                      	push r17
                                  
-000151 e020                      	ldi r18, 0
+0001bd e020                      	ldi r18, 0
                                  delayouter:
-000152 e010                      	ldi r17, 0
+0001be e010                      	ldi r17, 0
                                  delayinner:
-000153 951a                      	dec r17
-000154 f7f1                      	brne delayinner
-000155 952a                      	dec r18
-000156 f7d9                      	brne delayouter
+0001bf 951a                      	dec r17
+0001c0 f7f1                      	brne delayinner
+0001c1 952a                      	dec r18
+0001c2 f7d9                      	brne delayouter
                                  
-000157 911f                      	pop r17
-000158 912f                      	pop r18
-000159 bf2f                      	out CPU_SREG, r18
-00015a 912f                      	pop r18
-00015b 9508                      	ret
+0001c3 911f                      	pop r17
+0001c4 912f                      	pop r18
+0001c5 bf2f                      	out CPU_SREG, r18
+0001c6 912f                      	pop r18
+0001c7 9508                      	ret
                                  
                                  
                                  ; numbers is the segment values for 0-9
                                  ; letters are the segment values for A-Z
                                  ; text is the actual text you want to display and uses '/' as end of line
-00015c d703
-00015d c161
-00015e 8995
-00015f d309
-000160 9101                      numbers: .db $03,$D7,$61,$C1,$95,$89,$09,$D3,$01,$91
-000161 0d11
-000162 452b
-000163 3929
-000164 1581
-000165 cbd7
-000166 2f19
-000167 5d59
-000168 314d
-000169 7d91
-00016a 2d89
-00016b a74f
-00016c 5fa5
-00016d 6385                      letters: .db $11,$0D,$2B,$45,$29,$39,$81,$15,$D7,$CB,$19,$2F,$59,$5D,$4D,$31,$91,$7D,$89,$2D,$4F,$A7,$A5,$5F,$85,$63
-00016e 4241
-00016f 4443
-000170 4645
-000171 4847
-000172 4a49
-000173 4c4b
-000174 4e4d
-000175 504f
-000176 5251
-000177 5453
-000178 5655
-000179 5857
-00017a 5a59
-C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm(440): warning: .cseg .db misalignment - padding zero byte
+0001c8 d703
+0001c9 c161
+0001ca 8995
+0001cb d309
+0001cc 9101                      numbers: .db $03,$D7,$61,$C1,$95,$89,$09,$D3,$01,$91
+0001cd 0d11
+0001ce 452b
+0001cf 3929
+0001d0 150b
+0001d1 cbd7
+0001d2 2f19
+0001d3 5d59
+0001d4 314d
+0001d5 7d91
+0001d6 2d89
+0001d7 a74f
+0001d8 5fa5
+0001d9 6385                      letters: .db $11,$0D,$2B,$45,$29,$39,$0B,$15,$D7,$CB,$19,$2F,$59,$5D,$4D,$31,$91,$7D,$89,$2D,$4F,$A7,$A5,$5F,$85,$63
+0001da 4241
+0001db 4443
+0001dc 4645
+0001dd 4847
+0001de 4a49
+0001df 4c4b
+0001e0 4e4d
+0001e1 504f
+0001e2 5251
+0001e3 5453
+0001e4 5655
+0001e5 5857
+0001e6 5a59
+C:\Users\bwen6\Documents\Atmel Studio\7.0\segmentTest\segmentTest\main.asm(564): warning: .cseg .db misalignment - padding zero byte
 
 
 RESOURCE USE INFORMATION
@@ -4998,40 +5122,40 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega4809" register use summary:
-x  :   0 y  :   5 z  :  12 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   0 y  :   9 z  :  14 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  86 r17:  22 r18:  25 r19:  23 r20:   2 
-r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   5 
-r29:   5 r30:  19 r31:  19 
+r13:   0 r14:   0 r15:   0 r16: 113 r17:  34 r18:  32 r19:  32 r20:   2 
+r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   9 
+r29:   9 r30:  27 r31:  27 
 Registers used: 11 out of 35 (31.4%)
 
 "ATmega4809" instruction use summary:
-.lds  :   0 .sts  :   0 adc   :   5 add   :   5 adiw  :   0 and   :   0 
-andi  :   1 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0 
-brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   5 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   2 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   2 cln   :   0 clr   :   0 cls   :   0 
-clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   1 cpc   :   0 
-cpi   :   2 cpse  :   0 dec   :   5 eor   :   0 fmul  :   0 fmuls :   0 
+.lds  :   0 .sts  :   0 adc   :   7 add   :   7 adiw  :   0 and   :   0 
+andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
+brhs  :   0 brid  :   0 brie  :   0 brlo  :   1 brlt  :   0 brmi  :   0 
+brne  :   6 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   3 cbr   :   0 
+clc   :   0 clh   :   0 cli   :   3 cln   :   0 clr   :   0 cls   :   0 
+clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   2 cpc   :   0 
+cpi   :   1 cpse  :   0 dec   :   8 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   5 inc   :   2 jmp   :   0 
-ld    :   0 ldd   :   1 ldi   :  39 lds   :  19 lpm   :  13 lsl   :   0 
+ld    :   1 ldd   :   1 ldi   :  52 lds   :  25 lpm   :  17 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   2 or    :   0 ori   :   3 out   :  12 pop   :  33 
-push  :  24 rcall :  11 ret   :   8 reti  :   2 rjmp  :   6 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   1 sbic  :   2 sbis  :   1 
+neg   :   0 nop   :   2 or    :   0 ori   :   6 out   :  15 pop   :  52 
+push  :  33 rcall :  15 ret   :  10 reti  :   3 rjmp  :  11 rol   :   0 
+ror   :   0 sbc   :   1 sbci  :   0 sbi   :   1 sbic  :   4 sbis  :   4 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
-sei   :   4 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 st    :   8 std   :   0 sts   :  17 sub   :   0 
-subi  :   5 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 33 out of 112 (29.5%)
+sei   :   7 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
+sez   :   0 sleep :   0 st    :  10 std   :   1 sts   :  23 sub   :   0 
+subi  :   6 swap  :   0 tst   :   0 wdr   :   0 
+Instructions used: 35 out of 112 (31.3%)
 
 "ATmega4809" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0002f8    558     64    622   49152   1.3%
-[.dseg] 0x002800 0x00280a      0     10     10    6144   0.2%
+[.cseg] 0x000000 0x0003d0    774     64    838   49152   1.7%
+[.dseg] 0x002800 0x00280b      0     11     11    6144   0.2%
 [.eseg] 0x000000 0x000000      0      0      0     256   0.0%
 
 Assembly complete, 0 errors, 1 warnings
